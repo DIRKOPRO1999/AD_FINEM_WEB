@@ -1,28 +1,14 @@
 <!doctype html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ad-Finem — Panel de Administración</title>
+    <title>Ad-Finem — Admin deshabilitado</title>
   </head>
   <body>
-    <!-- Netlify Identity widget (necesario para login) -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <!-- Decap CMS (Netlify CMS fork) -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-    <script>
-      // Redirige al panel tras login
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
-          if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/';
-            });
-          }
-        });
-      }
-    </script>
+    <main style="font-family: Arial, sans-serif; padding: 32px;">
+      <h1>Admin deshabilitado</h1>
+      <p>El panel de administración fue migrado a Contentful.</p>
+    </main>
   </body>
 </html>

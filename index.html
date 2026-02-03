@@ -13,25 +13,6 @@
     <title>Ad Finem | Consultores Jurídicos</title>
     
     <meta name="description" content="Expertos en Derecho Laboral y Seguridad Social. Consultoría jurídica liderada por exjueces y exmagistrados." />
-
-    <!-- Netlify Identity: necesario para recuperación de contraseña y login -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        const openRecoveryIfNeeded = () => {
-          if (window.location.hash && window.location.hash.includes('recovery_token')) {
-            window.netlifyIdentity.open('recovery');
-          }
-        };
-
-        window.netlifyIdentity.on('init', () => {
-          openRecoveryIfNeeded();
-        });
-
-        window.netlifyIdentity.init();
-        openRecoveryIfNeeded();
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>
