@@ -1,0 +1,93 @@
+import { useEffect, useState } from 'react';
+import client, { isContentfulConfigured } from '../config/contentfulClient';
+
+const useNoticias = () => {
+  const [noticias, setNoticias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchNoticias = async () => {
+      setLoading(true);
+
+      // Fallback: si Contentful no está configurado, cargamos los JSON locales en src/data/noticias
+      if (!isContentfulConfigured || !client) {
+        try {
+          // import.meta.glob está disponible en Vite; usamos eager para obtener los módulos ahora
+          const modules = import.meta.glob('../data/noticias/*.json', { eager: true });
+          const items = Object.values(modules).map((m) => (m && m.default ? m.default : m));
+
+          const mapped = items.map((fields, idx) => {
+            const titulo = fields.title || fields.titulo || '';
+            const fecha = fields.date || fields.fecha || fields.createdAt || null;
+            const resumen = fields.resumen || fields.summary || fields.description || '';
+            const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || null;
+
+            return {
+              id: fields.slug || fields.id || `local-${idx}`,
+              titulo,
+              fecha,
+              urlImagen,
+              resumen,
+              createdAt: fields.createdAt || fecha,
+            };
+          });
+
+          mapped.sort((a, b) => new Date(b.fecha || b.createdAt) - new Date(a.fecha || a.createdAt));
+          if (mounted) setNoticias(mapped);
+        } catch (err) {
+          if (mounted) setError(err);
+        } finally {
+          if (mounted) setLoading(false);
+        }
+
+        return;
+      }
+
+      try {
+        const res = await client.getEntries({ content_type: 'noticia', limit: 100 });
+        const items = res?.items || [];
+
+        const mapped = items.map((item) => {
+          const fields = item.fields || {};
+          const titulo = fields.titulo || fields.title || fields.nombre || '';
+          const fecha = fields.fecha || fields.date || item.sys?.createdAt || null;
+          const resumen = fields.resumen || fields.summary || fields.description || '';
+
+          let urlImagen = null;
+          const imagen = fields.imagen || fields.image || null;
+          if (imagen && imagen.fields && imagen.fields.file && imagen.fields.file.url) {
+            const url = imagen.fields.file.url;
+            urlImagen = url.startsWith('//') ? `https:${url}` : url;
+          }
+
+          return {
+            id: item.sys?.id,
+            titulo,
+            fecha,
+            urlImagen,
+            resumen,
+            createdAt: item.sys?.createdAt,
+          };
+        });
+
+        mapped.sort((a, b) => new Date(b.fecha || b.createdAt) - new Date(a.fecha || a.createdAt));
+
+        if (mounted) setNoticias(mapped);
+      } catch (err) {
+        if (mounted) setError(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchNoticias();
+    return () => { mounted = false; };
+  }, []);
+
+  return { noticias, loading, error };
+};
+
+export default useNoticias;
