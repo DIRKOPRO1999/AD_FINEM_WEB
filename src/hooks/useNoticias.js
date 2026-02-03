@@ -21,8 +21,8 @@ const useNoticias = () => {
           const titulo = fields.title || fields.titulo || '';
           const fecha = fields.date || fields.fecha || fields.createdAt || null;
           const resumen = fields.resumen || fields.summary || fields.description || '';
-          const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || null;
-          const body = fields.body || fields.cuerpo || fields.content || '';
+          const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || fields.imagen || null;
+          const body = fields.body || fields.cuerpo || fields.content || fields.contenido || '';
           const slug = fields.slug || fields.id || `local-${idx}`;
 
           return {
@@ -62,11 +62,11 @@ const useNoticias = () => {
           const titulo = fields.titulo || fields.title || fields.nombre || '';
           const fecha = fields.fecha || fields.date || item.sys?.createdAt || null;
           const resumen = fields.resumen || fields.summary || fields.description || '';
-          const body = fields.body || fields.cuerpo || fields.content || '';
+          const body = fields.body || fields.cuerpo || fields.content || fields.contenido || '';
           const slug = fields.slug || item.sys?.id;
 
           let urlImagen = null;
-          const imagen = fields.imagen || fields.image || null;
+          const imagen = fields.imagen || fields.image || fields.thumbnail || null;
           if (imagen && imagen.fields && imagen.fields.file && imagen.fields.file.url) {
             const url = imagen.fields.file.url;
             urlImagen = url.startsWith('//') ? `https:${url}` : url;

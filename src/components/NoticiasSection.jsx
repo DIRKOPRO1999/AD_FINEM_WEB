@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import useNoticias from '../hooks/useNoticias';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 
 const SkeletonCard = () => (
   <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm transition-all duration-300 border border-gray-100 relative overflow-hidden h-full">
@@ -13,6 +15,55 @@ const SkeletonCard = () => (
 const NoticiasSection = () => {
   const { noticias, loading, error } = useNoticias();
   const [activeNoticia, setActiveNoticia] = useState(null);
+
+  const richTextOptions = useMemo(() => ({
+    renderNode: {
+      [BLOCKS.HEADING_1]: (node, children) => (
+        <h1 className="text-2xl md:text-3xl font-black text-brand-teal mt-6 mb-3">{children}</h1>
+      ),
+      [BLOCKS.HEADING_2]: (node, children) => (
+        <h2 className="text-xl md:text-2xl font-bold text-brand-teal mt-6 mb-3">{children}</h2>
+      ),
+      [BLOCKS.HEADING_3]: (node, children) => (
+        <h3 className="text-lg md:text-xl font-bold text-brand-teal mt-5 mb-2">{children}</h3>
+      ),
+      [BLOCKS.PARAGRAPH]: (node, children) => (
+        <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-3">{children}</p>
+      ),
+      [BLOCKS.UL_LIST]: (node, children) => (
+        <ul className="list-disc pl-5 text-gray-700 text-sm md:text-base mb-3">{children}</ul>
+      ),
+      [BLOCKS.OL_LIST]: (node, children) => (
+        <ol className="list-decimal pl-5 text-gray-700 text-sm md:text-base mb-3">{children}</ol>
+      ),
+      [BLOCKS.LIST_ITEM]: (node, children) => (
+        <li className="mb-1">{children}</li>
+      ),
+      [INLINES.HYPERLINK]: (node, children) => (
+        <a href={node.data.uri} className="text-brand-orange font-semibold underline" target="_blank" rel="noreferrer">
+          {children}
+        </a>
+      ),
+    },
+  }), []);
+
+  const getExcerpt = (body) => {
+    if (!body) return '';
+    if (typeof body === 'string') return body.slice(0, 140) + (body.length > 140 ? '…' : '');
+
+    try {
+      const text = body.content
+        ?.flatMap((block) => block.content || [])
+        .map((c) => c.value)
+        .filter(Boolean)
+        .join(' ')
+        .trim();
+      if (!text) return '';
+      return text.slice(0, 140) + (text.length > 140 ? '…' : '');
+    } catch {
+      return '';
+    }
+  };
 
   if (error) return <div className="text-center py-12 text-red-600">Error cargando noticias.</div>;
 
@@ -48,7 +99,7 @@ const NoticiasSection = () => {
 
                   <p className="text-xs text-gray-400 mb-2">{n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}</p>
                   <h3 className="text-lg md:text-xl font-bold text-brand-teal mb-2 md:mb-3 group-hover:text-brand-orange transition-colors">{n.titulo}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{n.resumen}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed">{n.resumen || getExcerpt(n.body)}</p>
                 </button>
               ))}
         </div>
@@ -82,8 +133,10 @@ const NoticiasSection = () => {
                   <p className="text-gray-700 text-sm md:text-base leading-relaxed">{activeNoticia.resumen}</p>
                 )}
                 {activeNoticia.body && (
-                  <div className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
-                    {activeNoticia.body}
+                  <div className="mt-2">
+                    {typeof activeNoticia.body === 'string'
+                      ? <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">{activeNoticia.body}</p>
+                      : documentToReactComponents(activeNoticia.body, richTextOptions)}
                   </div>
                 )}
               </div>
