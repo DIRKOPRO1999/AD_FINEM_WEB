@@ -18,13 +18,18 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
-          // Si llega con recovery_token, abrir el widget de recuperación
-          if (!user && window.location.hash && window.location.hash.includes('recovery_token')) {
+        const openRecoveryIfNeeded = () => {
+          if (window.location.hash && window.location.hash.includes('recovery_token')) {
             window.netlifyIdentity.open('recovery');
           }
+        };
+
+        window.netlifyIdentity.on('init', () => {
+          openRecoveryIfNeeded();
         });
+
         window.netlifyIdentity.init();
+        openRecoveryIfNeeded();
       }
     </script>
   </head>
