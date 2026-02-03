@@ -12,37 +12,40 @@ const useNoticias = () => {
     const fetchNoticias = async () => {
       setLoading(true);
 
-      // Fallback: si Contentful no está configurado, cargamos los JSON locales en src/data/noticias
+      const loadLocalNoticias = async () => {
+        // import.meta.glob está disponible en Vite; usamos eager para obtener los módulos ahora
+        const modules = import.meta.glob('../data/noticias/*.json', { eager: true });
+        const items = Object.values(modules).map((m) => (m && m.default ? m.default : m));
+
+        const mapped = items.map((fields, idx) => {
+          const titulo = fields.title || fields.titulo || '';
+          const fecha = fields.date || fields.fecha || fields.createdAt || null;
+          const resumen = fields.resumen || fields.summary || fields.description || '';
+          const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || null;
+
+          return {
+            id: fields.slug || fields.id || `local-${idx}`,
+            titulo,
+            fecha,
+            urlImagen,
+            resumen,
+            createdAt: fields.createdAt || fecha,
+          };
+        });
+
+        mapped.sort((a, b) => new Date(b.fecha || b.createdAt) - new Date(a.fecha || a.createdAt));
+        if (mounted) setNoticias(mapped);
+      };
+
+      // Fallback: si Contentful no está configurado, cargar JSON locales
       if (!isContentfulConfigured || !client) {
         try {
-          // import.meta.glob está disponible en Vite; usamos eager para obtener los módulos ahora
-          const modules = import.meta.glob('../data/noticias/*.json', { eager: true });
-          const items = Object.values(modules).map((m) => (m && m.default ? m.default : m));
-
-          const mapped = items.map((fields, idx) => {
-            const titulo = fields.title || fields.titulo || '';
-            const fecha = fields.date || fields.fecha || fields.createdAt || null;
-            const resumen = fields.resumen || fields.summary || fields.description || '';
-            const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || null;
-
-            return {
-              id: fields.slug || fields.id || `local-${idx}`,
-              titulo,
-              fecha,
-              urlImagen,
-              resumen,
-              createdAt: fields.createdAt || fecha,
-            };
-          });
-
-          mapped.sort((a, b) => new Date(b.fecha || b.createdAt) - new Date(a.fecha || a.createdAt));
-          if (mounted) setNoticias(mapped);
+          await loadLocalNoticias();
         } catch (err) {
           if (mounted) setError(err);
         } finally {
           if (mounted) setLoading(false);
         }
-
         return;
       }
 
@@ -76,8 +79,18 @@ const useNoticias = () => {
         mapped.sort((a, b) => new Date(b.fecha || b.createdAt) - new Date(a.fecha || a.createdAt));
 
         if (mounted) setNoticias(mapped);
+
+        // Si Contentful no devuelve noticias, usar fallback local
+        if (mounted && mapped.length === 0) {
+          await loadLocalNoticias();
+        }
       } catch (err) {
-        if (mounted) setError(err);
+        // Si falla Contentful, intenta fallback local
+        try {
+          await loadLocalNoticias();
+        } catch (innerErr) {
+          if (mounted) setError(innerErr);
+        }
       } finally {
         if (mounted) setLoading(false);
       }

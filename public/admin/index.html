@@ -4,11 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Ad-Finem — Panel de Administración</title>
-
   </head>
   <body>
-    <div id="nc-root"></div>
-
     <!-- Netlify Identity widget (necesario para login) -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
@@ -16,18 +13,15 @@
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
     <script>
-      // Inicializa Netlify Identity y Decap CMS
+      // Redirige al panel tras login
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on('init', user => {
-          if (!user && location.pathname.startsWith('/admin')) {
-            window.netlifyIdentity.open();
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
           }
         });
-        window.netlifyIdentity.init();
-      }
-
-      if (window.CMS && typeof window.CMS.init === 'function') {
-        window.CMS.init({ config: '/admin/config.yml' });
       }
     </script>
   </body>
