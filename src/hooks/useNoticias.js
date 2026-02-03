@@ -22,13 +22,17 @@ const useNoticias = () => {
           const fecha = fields.date || fields.fecha || fields.createdAt || null;
           const resumen = fields.resumen || fields.summary || fields.description || '';
           const urlImagen = fields.thumbnail || fields.thumbnailUrl || fields.image || null;
+          const body = fields.body || fields.cuerpo || fields.content || '';
+          const slug = fields.slug || fields.id || `local-${idx}`;
 
           return {
-            id: fields.slug || fields.id || `local-${idx}`,
+            id: slug,
+            slug,
             titulo,
             fecha,
             urlImagen,
             resumen,
+            body,
             createdAt: fields.createdAt || fecha,
           };
         });
@@ -58,6 +62,8 @@ const useNoticias = () => {
           const titulo = fields.titulo || fields.title || fields.nombre || '';
           const fecha = fields.fecha || fields.date || item.sys?.createdAt || null;
           const resumen = fields.resumen || fields.summary || fields.description || '';
+          const body = fields.body || fields.cuerpo || fields.content || '';
+          const slug = fields.slug || item.sys?.id;
 
           let urlImagen = null;
           const imagen = fields.imagen || fields.image || null;
@@ -68,10 +74,12 @@ const useNoticias = () => {
 
           return {
             id: item.sys?.id,
+            slug,
             titulo,
             fecha,
             urlImagen,
             resumen,
+            body,
             createdAt: item.sys?.createdAt,
           };
         });
