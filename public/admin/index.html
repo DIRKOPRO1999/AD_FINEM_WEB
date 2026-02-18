@@ -42,19 +42,14 @@
       <p>Administra y publica noticias, imágenes y PDF fácilmente.</p>
     </div>
     <div id="cms-root"></div>
-    <script type="importmap">
-      {
-        "imports": {
-          "decap-cms": "https://esm.sh/decap-cms@3.10.0"
-        }
-      }
-    </script>
-    <script type="module">
-      import CMS from "decap-cms";
+    <script src="https://unpkg.com/decap-cms@3.10.0/dist/decap-cms.js"></script>
+    <script>
       window.CMS_MANUAL_INIT = true;
       window.addEventListener('DOMContentLoaded', function() {
-        if (typeof CMS.init === 'function') {
-          CMS.init();
+        if (window.DecapCMS && typeof window.DecapCMS.init === 'function') {
+          window.DecapCMS.init();
+        } else if (window.CMS && typeof window.CMS.init === 'function') {
+          window.CMS.init();
         }
       });
     </script>
