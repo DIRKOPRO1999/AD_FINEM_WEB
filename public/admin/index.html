@@ -3,12 +3,59 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Ad-Finem — Admin deshabilitado</title>
+    <title>Ad-Finem — Administración</title>
   </head>
   <body>
-    <main style="font-family: Arial, sans-serif; padding: 32px;">
-      <h1>Admin deshabilitado</h1>
-      <p>El panel de administración fue migrado a Contentful.</p>
-    </main>
+    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
+    <style>
+      body { background: #f9fafb; font-family: Inter, Arial, sans-serif; }
+      .custom-cms-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #005A66;
+        color: #fff;
+        padding: 18px 32px 12px 32px;
+        border-radius: 0 0 18px 18px;
+        margin-bottom: 24px;
+      }
+      .custom-cms-header img {
+        height: 48px;
+        border-radius: 12px;
+        background: #fff;
+        padding: 4px;
+      }
+      .custom-cms-header h1 {
+        font-size: 1.7rem;
+        font-weight: 900;
+        margin: 0;
+        letter-spacing: 1px;
+      }
+      .custom-cms-header p {
+        margin: 0;
+        font-size: 1rem;
+        color: #f0f9fa;
+        font-weight: 400;
+      }
+    </style>
+    <div class="custom-cms-header">
+      <img src="/LOGO%20AD%20FINEM.png" alt="Ad Finem Logo" />
+      <div>
+        <h1>Panel de Noticias — Ad Finem</h1>
+        <p>Administra y publica noticias, imágenes y PDF fácilmente.</p>
+      </div>
+    </div>
+    <div id="cms-root"></div>
+    <script>
+      window.CMS_MANUAL_INIT = true;
+      window.addEventListener('DOMContentLoaded', function() {
+        // Compatibilidad para DecapCMS y CMS
+        if (window.DecapCMS && typeof window.DecapCMS.init === 'function') {
+          window.DecapCMS.init();
+        } else if (window.CMS && typeof window.CMS.init === 'function') {
+          window.CMS.init();
+        }
+      });
+    </script>
   </body>
 </html>

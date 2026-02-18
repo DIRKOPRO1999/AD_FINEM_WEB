@@ -1,1 +1,39 @@
-# Admin migrado a Contentful. Este archivo queda sin uso.
+backend:
+  name: github
+  repo: DIRKOPRO1999/AD_FINEM_WEB
+  branch: main
+
+media_folder: "public/assets/noticias"
+public_folder: "/assets/noticias"
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    folder: "src/data/noticias"
+    create: true
+    slug: "{{date}}-{{slug}}"
+    extension: "json"
+    fields:
+      - label: "Título"
+        name: "title"
+        widget: "string"
+      - label: "Fecha"
+        name: "date"
+        widget: "datetime"
+      - label: "Resumen"
+        name: "resumen"
+        widget: "text"
+      - label: "Imagen"
+        name: "thumbnail"
+        widget: "image"
+        required: false
+      - label: "PDF"
+        name: "pdfUrl"
+        widget: "file"
+        required: false
+        media_library:
+          allow_multiple: false
+          type: "application/pdf"
+      - label: "Cuerpo"
+        name: "body"
+        widget: "markdown"
