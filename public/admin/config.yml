@@ -2,8 +2,8 @@ backend:
   name: github
   repo: DIRKOPRO1999/AD_FINEM_WEB
   branch: main
-  base_url: https://decap-cms-oauth-yourname.vercel.app
-  auth_endpoint: /api/auth
+  base_url: https://netlify-cms-github-oauth-provider-two.vercel.app
+  auth_endpoint: /auth
 
 media_folder: "public/assets/noticias"
 public_folder: "/assets/noticias"
