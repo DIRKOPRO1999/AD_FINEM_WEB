@@ -6,7 +6,6 @@
     <title>Ad-Finem — Administración</title>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
     <style>
       body { background: #f9fafb; font-family: Inter, Arial, sans-serif; }
       .custom-cms-header {
@@ -46,14 +45,12 @@
       </div>
     </div>
     <div id="cms-root"></div>
-    <script>
+    <script type="module">
+      import CMS from 'decap-cms';
       window.CMS_MANUAL_INIT = true;
       window.addEventListener('DOMContentLoaded', function() {
-        // Compatibilidad para DecapCMS y CMS
-        if (window.DecapCMS && typeof window.DecapCMS.init === 'function') {
-          window.DecapCMS.init();
-        } else if (window.CMS && typeof window.CMS.init === 'function') {
-          window.CMS.init();
+        if (typeof CMS.init === 'function') {
+          CMS.init();
         }
       });
     </script>
