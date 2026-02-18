@@ -3,7 +3,7 @@ backend:
   repo: DIRKOPRO1999/AD_FINEM_WEB
   branch: main
   base_url: https://netlify-cms-github-oauth-provider-two.vercel.app
-  auth_endpoint: /auth
+  auth_endpoint: https://netlify-cms-github-oauth-provider-production.up.railway.app/auth
 
 media_folder: "public/assets/noticias"
 public_folder: "/assets/noticias"
