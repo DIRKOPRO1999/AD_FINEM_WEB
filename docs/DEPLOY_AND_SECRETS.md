@@ -44,6 +44,10 @@ export CLOUDFLARE_API_TOKEN="<new-cloudflare-token>"  # optional
 ## Verify deployment
 - Check GitHub Actions logs for the `build-and-deploy` job. If `Publish to Cloudflare Pages` runs, verify the Pages site.
 
+---
+
+_NOTE: committed package-lock.json has been synchronized to fix `npm ci` failures — pushing a new commit will trigger a fresh Pages build._
+
 ## Security notes
 - Use ANON key only in client-side code. Never expose service_role key.
 - Limit Cloudflare token scope to Pages operations and set expiration.
