@@ -81,36 +81,31 @@ const NoticiasSection = () => {
           {loading
             ? // mostrar 6 skeletons para ocupar el espacio y evitar salto de diseño
               Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-            : noticias.map((n) => (
-                {/* tarjeta: ahora enlaza a /noticias/:slug para que cada noticia tenga su propia URL indexable */}
-                {
-                  (() => {
-                    const slug = slugify(n.titulo || n.title || n.id || n.fecha);
-                    return (
-                      <Link
-                        to={`/noticias/${slug}`}
-                        key={n.id}
-                        className="text-left bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 group border border-gray-100 hover:border-brand-orange/20 relative overflow-hidden h-full"
-                      >
-                        {n.url_imagen ? (
-                          <img
-                            src={n.url_imagen}
-                            alt={n.titulo || 'Noticia'}
-                            loading="lazy"
-                            className="w-full h-44 md:h-48 object-cover rounded-xl mb-4"
-                          />
-                        ) : (
-                          <div className="w-full h-44 md:h-48 bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400">Imagen no disponible</div>
-                        )}
+            : noticias.map((n) => {
+                const slug = slugify(n.titulo || n.title || n.id || n.fecha);
+                return (
+                  <Link
+                    to={`/noticias/${slug}`}
+                    key={n.id}
+                    className="text-left bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 group border border-gray-100 hover:border-brand-orange/20 relative overflow-hidden h-full"
+                  >
+                    {n.url_imagen ? (
+                      <img
+                        src={n.url_imagen}
+                        alt={n.titulo || 'Noticia'}
+                        loading="lazy"
+                        className="w-full h-44 md:h-48 object-cover rounded-xl mb-4"
+                      />
+                    ) : (
+                      <div className="w-full h-44 md:h-48 bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400">Imagen no disponible</div>
+                    )}
 
-                        <p className="text-xs text-gray-400 mb-2">{n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}</p>
-                        <h3 className="text-lg md:text-xl font-bold text-brand-teal mb-2 md:mb-3 group-hover:text-brand-orange transition-colors">{n.titulo}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">{n.resumen || getExcerpt(n.body)}</p>
-                      </Link>
-                    );
-                  })()
-                }
-              ))}
+                    <p className="text-xs text-gray-400 mb-2">{n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}</p>
+                    <h3 className="text-lg md:text-xl font-bold text-brand-teal mb-2 md:mb-3 group-hover:text-brand-orange transition-colors">{n.titulo}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{n.resumen || getExcerpt(n.body)}</p>
+                  </Link>
+                );
+              })}
         </div>
 
         {activeNoticia && (
