@@ -74,7 +74,7 @@ const NoticiasSection = () => {
       <div className="container mx-auto px-6">
         <div className="mb-8">
           <h2 className="text-4xl md:text-5xl font-extrabold text-brand-teal mb-2">Actualidad y Análisis Jurídico</h2>
-          <p className="text-gray-600 mt-2">Noticias y análisis seleccionados por Consultores jurídicos.</p>
+          <p className="text-gray-600 mt-2 text-justify">Noticias y análisis seleccionados por Consultores jurídicos.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -102,7 +102,7 @@ const NoticiasSection = () => {
 
                     <p className="text-xs text-gray-400 mb-2">{n.fecha ? new Date(n.fecha).toLocaleDateString() : ''}</p>
                     <h3 className="text-lg md:text-xl font-bold text-brand-teal mb-2 md:mb-3 group-hover:text-brand-orange transition-colors">{n.titulo}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{n.resumen || getExcerpt(n.body)}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed text-justify">{n.resumen || getExcerpt(n.body)}</p>
                   </Link>
                 );
               })}
@@ -134,11 +134,11 @@ const NoticiasSection = () => {
                   />
                 )}
                 {activeNoticia.resumen && (
-                  <p className="text-gray-700 text-sm md:text-base leading-relaxed">{activeNoticia.resumen}</p>
+                  <p className="text-gray-700 text-sm md:text-base leading-relaxed text-justify">{activeNoticia.resumen}</p>
                 )}
                 {activeNoticia.cuerpo && (
                   <div className="mt-2">
-                    <div className="text-gray-700 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: activeNoticia.cuerpo }} />
+                    <div className="text-gray-700 text-sm md:text-base leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: activeNoticia.cuerpo }} />
                   </div>
                 )}
                 {activeNoticia.url_pdf && (

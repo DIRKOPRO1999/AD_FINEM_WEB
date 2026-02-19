@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ---------- Utilidad global para texto justificado ---------- */
+/* Clase reutilizable para aplicar `text-align: justify` + hyphens: auto */
+.text-justified {
+  @apply text-justify;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  text-justify: inter-word;
+}
+
+/* Aplicar justificado sólo a elementos de contenido (párrafos largos, artículos, .prose, descripciones)
+   - Incluye bloques que usan `leading-relaxed` o clases `text-gray-*` (divs, p, spans)
+   - No sobrescribe selectores explícitos `text-*` (p.ej. títulos o elementos con text-center)
+*/
+.text-justified article p,
+.text-justified .prose,
+.text-justified .prose p,
+.text-justified p.text-gray-700,
+.text-justified p.text-gray-600,
+.text-justified .leading-relaxed,
+.text-justified .text-gray-700,
+.text-justified .text-gray-600 {
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  text-justify: inter-word;
+  -webkit-text-align-last: left;
+  text-align-last: left;
+}
+
+/* Evitar aplicar justificado a títulos, botones y menús (se mantienen intactos) */
+.text-justified h1,
+.text-justified h2,
+.text-justified h3,
+.text-justified h4,
+.text-justified h5,
+.text-justified h6,
+.text-justified button,
+.text-justified nav,
+.text-justified .menu {
+  text-align: inherit;
+}
+
+/* Asegurar que títulos, botones y menús mantienen su alineación original */
+.text-justified h1,
+.text-justified h2,
+.text-justified h3,
+.text-justified h4,
+.text-justified h5,
+.text-justified h6,
+.text-justified button,
+.text-justified nav,
+.text-justified .menu {
+  text-align: inherit;
+}
+
+/* Ajustes responsivos para evitar espacios grandes entre palabras */
+@media (max-width: 640px) {
+  .text-justified article p,
+  .text-justified .prose p,
+  .text-justified p.text-gray-700,
+  .text-justified p.text-gray-600 {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    overflow-wrap: break-word;
+  }
+}

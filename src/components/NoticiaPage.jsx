@@ -40,6 +40,11 @@ export default function NoticiaPage() {
   }
 
   const article = noticiaFromDB || local;
+  const pdfSrc = article?.pdfUrl || article?.url_pdf || null;
+  const getFileName = (url) => {
+    try { return decodeURIComponent((url || '').split('/').pop()); }
+    catch (e) { return url; }
+  };
 
   useEffect(() => {
     if (!article) return;
@@ -81,7 +86,7 @@ export default function NoticiaPage() {
   return (
     <main className="container mx-auto px-6 py-16">
       <Link to="/" className="text-sm text-slate-500 hover:underline mb-6 inline-block">← Volver</Link>
-      <article className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow">
+      <article className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow text-justify">
         <p className="text-xs text-gray-400 mb-2">{article.date || article.fecha ? new Date(article.date || article.fecha).toLocaleDateString() : ''}</p>
         <h1 className="text-3xl font-extrabold text-brand-teal mb-4">{article.titulo || article.title}</h1>
 
@@ -89,15 +94,29 @@ export default function NoticiaPage() {
           <img src={article.url_imagen || article.thumbnail} alt={article.titulo || article.title} className="w-full h-auto rounded-xl mb-6 object-cover" />
         ) }
 
-        {article.resumen && <p className="text-gray-700 mb-4">{article.resumen}</p>}
+        {article.resumen && <p className="text-gray-700 mb-4 text-justify">{article.resumen}</p>}
 
         {article.body && (
-          <div className="prose max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: article.body }} />
+          <div className="prose max-w-none text-gray-700 text-justify" dangerouslySetInnerHTML={{ __html: article.body }} />
         )}
 
-        {(article.pdfUrl || article.url_pdf) && (
-          <div className="mt-6">
-            <a href={article.pdfUrl || article.url_pdf} target="_blank" rel="noopener noreferrer" className="text-brand-orange font-bold underline">Abrir documento PDF</a>
+        {pdfSrc && (
+          <div className="mt-6 text-left">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
+              <div className="text-sm text-slate-600">Documento adjunto: <span className="font-medium text-slate-800">{getFileName(pdfSrc)}</span></div>
+              <div className="flex gap-2">
+                <a href={pdfSrc} target="_blank" rel="noopener noreferrer" className="text-brand-orange font-bold underline">Abrir en nueva pestaña</a>
+                <a href={pdfSrc} download className="text-sm bg-slate-100 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-200">Descargar</a>
+              </div>
+            </div>
+
+            <div className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+              <div className="w-full h-[56vh] sm:h-[64vh] md:h-[72vh] lg:h-[80vh]">
+                <object data={pdfSrc} type="application/pdf" width="100%" height="100%" className="w-full h-full">
+                  <iframe src={pdfSrc} title="Visor PDF" className="w-full h-full" />
+                </object>
+              </div>
+            </div>
           </div>
         )}
       </article>

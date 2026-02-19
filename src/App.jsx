@@ -146,7 +146,7 @@ const App = ({ adminMode }) => {
     }
     // Renderiza el panel dedicado de noticias
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 text-justified">
         <NoticiasSidebar />
         <NoticiasDashboard />
       </div>
@@ -154,7 +154,7 @@ const App = ({ adminMode }) => {
   }
 
   return (
-    <div className="font-sans text-slate-800 bg-gray-50 min-h-screen flex flex-col overflow-x-hidden">
+    <div className="font-sans text-slate-800 bg-gray-50 min-h-screen flex flex-col overflow-x-hidden text-justified">
       
       {/* --- BOTÓN FLOTANTE WHATSAPP --- */}
       <a 
@@ -751,8 +751,7 @@ const App = ({ adminMode }) => {
                   </div>
                   <div>
                     <p className="font-bold text-white mb-1">Cali, Valle del Cauca</p>
-                    <p className="text-slate-400 text-sm">Carrera 4 #10-44, Oficina 618</p>
-                    <p className="text-slate-400 text-sm">Edificio Plaza Caicedo</p>
+                    <p className="text-slate-400 text-sm">CALLE 18 # 66-50, OF 203B, EL PARQUE 2, B/LA HACIENDA CALI.</p>
                   </div>
                 </div>
                 
