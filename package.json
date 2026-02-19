@@ -12,6 +12,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.6",
     "@contentful/rich-text-types": "^17.2.5",
+    "@floating-ui/dom": "^1.7.5",
     "@supabase/supabase-js": "^2.97.0",
     "@tiptap/react": "^3.20.0",
     "@tiptap/starter-kit": "^3.20.0",
