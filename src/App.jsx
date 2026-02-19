@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from './config/supabaseClient';
+import { useAuthGuard } from './hooks/useAuthGuard';
 import logoAdFinem from '../LOGO AD FINEM.png';
 import { 
   ShieldCheck, 
@@ -21,6 +24,8 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import NoticiasSection from './components/NoticiasSection';
+import NoticiasSidebar from './components/NoticiasSidebar';
+import NoticiasDashboard from './components/NoticiasDashboard';
 
 // --- COMPONENTES AUXILIARES ---
 
@@ -74,7 +79,41 @@ const FadeInSection = ({ children, delay = "0" }) => {
 
 // --- COMPONENTE PRINCIPAL APP ---
 
-const App = () => {
+const App = ({ adminMode }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [loadingUser, setLoadingUser] = useState(adminMode);
+
+    // Guard de autenticación para /admin
+    useEffect(() => {
+      if (adminMode) {
+        setLoadingUser(true);
+        supabase.auth.getSession().then(({ data }) => {
+          if (!data.session) {
+            navigate('/login');
+          } else {
+            setUser(data.session.user);
+          }
+          setLoadingUser(false);
+        });
+        const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+          if (!session) {
+            navigate('/login');
+          } else {
+            setUser(session.user);
+          }
+        });
+        return () => listener.subscription.unsubscribe();
+      }
+    }, [adminMode, navigate]);
+
+    // Logout handler
+    const handleLogout = async () => {
+      await supabase.auth.signOut();
+      setUser(null);
+      navigate('/login');
+    };
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -97,6 +136,23 @@ const App = () => {
   const whatsappNumber = "573043765364";
   const whatsappMessage = "Hola Ad Finem, quisiera más información sobre sus servicios jurídicos.";
 
+
+  if (adminMode) {
+    if (loadingUser) {
+      return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+    }
+    if (!user) {
+      return null;
+    }
+    // Renderiza el panel dedicado de noticias
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <NoticiasSidebar />
+        <NoticiasDashboard />
+      </div>
+    );
+  }
+
   return (
     <div className="font-sans text-slate-800 bg-gray-50 min-h-screen flex flex-col overflow-x-hidden">
       
@@ -116,6 +172,12 @@ const App = () => {
       </a>
 
       {/* --- NAVEGACIÓN --- */}
+      {adminMode && user && (
+        <nav className="w-full bg-slate-900 text-white p-4 flex justify-between items-center">
+          <span className="font-bold">Panel Administrativo</span>
+          <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white font-bold">Cerrar sesión</button>
+        </nav>
+      )}
       <nav 
         className={`fixed w-full z-50 transition-all duration-300 ${
           isScrolled 

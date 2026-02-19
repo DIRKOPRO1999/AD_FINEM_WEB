@@ -86,9 +86,9 @@ const NoticiasSection = () => {
                   onClick={() => setActiveNoticia(n)}
                   className="text-left bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 group border border-gray-100 hover:border-brand-orange/20 relative overflow-hidden h-full"
                 >
-                  {n.urlImagen ? (
+                  {n.url_imagen ? (
                     <img
-                      src={n.urlImagen}
+                      src={n.url_imagen}
                       alt={n.titulo || 'Noticia'}
                       loading="lazy"
                       className="w-full h-44 md:h-48 object-cover rounded-xl mb-4"
@@ -122,9 +122,9 @@ const NoticiasSection = () => {
               </div>
 
               <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                {activeNoticia.urlImagen && (
+                {activeNoticia.url_imagen && (
                   <img
-                    src={activeNoticia.urlImagen}
+                    src={activeNoticia.url_imagen}
                     alt={activeNoticia.titulo || 'Noticia'}
                     className="w-full h-64 object-cover rounded-xl"
                   />
@@ -132,12 +132,26 @@ const NoticiasSection = () => {
                 {activeNoticia.resumen && (
                   <p className="text-gray-700 text-sm md:text-base leading-relaxed">{activeNoticia.resumen}</p>
                 )}
-                {activeNoticia.body && (
+                {activeNoticia.cuerpo && (
                   <div className="mt-2">
-                    {typeof activeNoticia.body === 'string'
-                      ? <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">{activeNoticia.body}</p>
-                      : documentToReactComponents(activeNoticia.body, richTextOptions)}
+                    <div className="text-gray-700 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: activeNoticia.cuerpo }} />
                   </div>
+                )}
+                {activeNoticia.url_pdf && (
+                  <>
+                    <div className="mt-4 border rounded overflow-hidden">
+                      <iframe
+                        src={activeNoticia.url_pdf}
+                        title="Documento PDF"
+                        className="w-full h-64 md:h-[48vh]"
+                        frameBorder="0"
+                      />
+                    </div>
+                    <div className="mt-3 flex gap-4 items-center">
+                      <a href={activeNoticia.url_pdf} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-bold">Abrir en nueva pestaña</a>
+                      <a href={activeNoticia.url_pdf} download className="text-sm text-gray-500 underline">Descargar PDF</a>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
