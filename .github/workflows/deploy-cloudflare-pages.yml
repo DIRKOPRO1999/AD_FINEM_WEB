@@ -1,0 +1,40 @@
+name: CI / Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Optional: publish to Cloudflare Pages using Wrangler
+      # To enable this step add two repository secrets:
+      # - CLOUDFLARE_API_TOKEN (with 'Pages:Edit' scope) and
+      # - CLOUDFLARE_PAGES_PROJECT_NAME (your Pages project name)
+      - name: Publish to Cloudflare Pages (optional)
+        if: env.CLOUDFLARE_API_TOKEN && env.CLOUDFLARE_PAGES_PROJECT_NAME
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_PAGES_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
+        run: |
+          echo "Publishing to Cloudflare Pages via wrangler..."
+          npx wrangler@3 pages publish ./dist --project-name "$CLOUDFLARE_PAGES_PROJECT_NAME" --branch main --commit-sha ${{ github.sha }}
+
+      - name: Done
+        run: echo "Build finished (Cloudflare deploy is optional and requires repo secrets)."
