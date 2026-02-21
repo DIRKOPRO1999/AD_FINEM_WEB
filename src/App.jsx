@@ -642,7 +642,7 @@ const App = ({ adminMode }) => {
 
                {/* --- INFO --- */}
                <div className="md:w-7/12 p-6 md:p-12 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50">
-                 <h3 className="text-2xl md:text-3xl font-bold text-brand-teal mb-2">Narda Marcela Cabezas Vargas</h3>
+                 <h3 className="text-2xl md:text-3xl font-bold text-brand-teal mb-2 whitespace-nowrap tracking-tight uppercase">Narda Marcela Cabezas Vargas</h3>
                  <p className="text-brand-orange font-bold mb-6 md:mb-8 uppercase text-xs md:text-sm tracking-widest flex items-center gap-2">
                    Directora Jurídica <span className="h-px w-8 bg-brand-orange/50"></span>
                  </p>
