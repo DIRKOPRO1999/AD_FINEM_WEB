@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* ---------- Utilidad global para texto justificado ---------- */
 /* Clase reutilizable para aplicar `text-align: justify` + hyphens: auto */
 .text-justified {
